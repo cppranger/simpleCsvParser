@@ -2,6 +2,22 @@ import re
 from prettytable import PrettyTable
 
 
+def headersToSnakeCase(headers: list):
+    new_headers = []
+    for elem in headers:
+        new_headers.append(strToSnakeCase(elem))
+    return new_headers
+
+
+def strToSnakeCase(_str):
+    _str = _str.split()
+    _str[0] = _str[0].lower()
+    for elem in range(1, len(_str)):
+        _str[elem] = _str[elem].title()
+    _str = ''.join(_str)
+    return _str
+
+
 def printPrettyTable(data: list):
     myTable = PrettyTable()
     headers = data[0]
@@ -79,8 +95,24 @@ def exportToJson(data: list, table_name='table name', element_name="element name
         cur_doc.write('\n}')
 
 
+def exportToXml(data: list, table_name='table name', element_name='element name', file='new_example.xml'):
+    with open(file, 'w', newline='') as cur_doc:
+        headers = data[0]
+        headers = headersToSnakeCase(headers)
+        table_name = strToSnakeCase(table_name)
+        element_name = strToSnakeCase(element_name)
+        cur_doc.write('<' + table_name + '>\n')
+        for row in range(1, len(data)):
+            cur_doc.write('\t<' + element_name + '>\n')
+            for elem in range(0, len(headers)):
+                cur_doc.write('\t\t<' + headers[elem] + '>' + data[row][elem] + '</' + headers[elem] + '>\n')
+            cur_doc.write('\t</' + element_name + '>\n')
+        cur_doc.write('</' + table_name + '>\n')
+
+
 if __name__ == "__main__":
-    users = readCsv("example (2).csv")
+    users = readCsv("username.csv")
+    exportToXml(users, 'users', 'user')
+    saveCsv(users)
+    exportToJson(users, 'users', 'user')
     printPrettyTable(users)
-    # saveCsv(users)
-    # exportToJson(users, 'users', 'user')
