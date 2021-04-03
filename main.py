@@ -1,4 +1,17 @@
 import re
+from prettytable import PrettyTable
+
+
+def printPrettyTable(data: list):
+    myTable = PrettyTable()
+    headers = data[0]
+    headers.insert(0, '#')
+    myTable.field_names = headers
+    for row in range(1, len(data)):
+        cur_row = data[row]
+        cur_row.insert(0, row)
+        myTable.add_row(cur_row)
+    print(myTable)
 
 
 def deleteUnnecessary(line: list):
@@ -67,6 +80,7 @@ def exportToJson(data: list, table_name='table name', element_name="element name
 
 
 if __name__ == "__main__":
-    users = readCsv("username.csv")
-    saveCsv(users)
-    exportToJson(users, 'users', 'user')
+    users = readCsv("example (2).csv")
+    printPrettyTable(users)
+    # saveCsv(users)
+    # exportToJson(users, 'users', 'user')
